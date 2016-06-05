@@ -4,7 +4,6 @@
 #include <algorithm>
 
 using namespace std;
-const char* STATUSLINE_PATTERN1 = "HTTP/([\\d\\.]+)\\s([\\d]+)\\s([\\w\\.-]+)\\r\\n";
 const char* STATUSLINE_PATTERN = "(.*?)\\s(.*?)\\s(.*?)\\r\\n";
 const char* HEADER_PATTERN = "(.*?):\\s(.*?)\\r\\n";
 
