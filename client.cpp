@@ -20,7 +20,7 @@ bool HttpClient::Connect(const std::string &hostname, int port)
         Disconnect();
     }
     
-    sockfd_ = socket(PF_INET, SOCK_STREAM, 0);
+    sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
     struct hostent *host;
     
     host = gethostbyname(hostname.c_str());
