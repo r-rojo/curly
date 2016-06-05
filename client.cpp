@@ -65,10 +65,16 @@ HttpResponse HttpClient::Send(HttpRequest & request)
     return response;
 }
 
+HttpResponse HttpClient::Get(const std::string &url)
+{
+    HttpRequest request("GET", url);
+    return Send(request);
+}
+
 bool HttpClient::SendRequest(HttpRequest &request)
 {
-    const std::vector<char> buffer = request.GetBuffer();
-    if (write(sockfd_, &buffer[0], buffer.size()) == -1)
+    auto buffer = request.GetBuffer();
+    if (write(sockfd_, buffer.data(), buffer.size()) == -1)
     {
         // Log error
         std::cout << "Error sending request buffer: " << strerror(errno) << std::endl;
@@ -94,7 +100,7 @@ bool HttpClient::ReceiveResponse(HttpResponse & response)
     
     
     std::string statusline = "", line = "";
-    if (!readline(sockfd_, statusline))
+    if (!ReadLine(statusline))
     {
         std::cout << "Error getting status line" << std::endl;
         return false;
@@ -127,7 +133,7 @@ bool HttpClient::ReceiveResponse(HttpResponse & response)
         if (events[0].ident == sockfd_)
         {
             // get headers
-            while (readline(sockfd_, line) )
+            while (ReadLine(line) )
             {
                 
                 if (line == "\r\n" || !response.ParseHeader(line))
@@ -151,15 +157,15 @@ bool HttpClient::ReceiveResponse(HttpResponse & response)
             }
             else if (xfer_encoding == "chunked")
             {
-                readline(sockfd_, line);
+                ReadLine(line);
                 std::size_t chunk_size = std::stol(line, 0, 16);
                 while (chunk_size > 0)
                 {
                     char buffer[chunk_size];
                     ReadBytes(buffer, chunk_size);
                     response.SetBody(buffer, chunk_size, true); // append to the body
-                    readline(sockfd_, line); // eat the next crlf
-                    readline(sockfd_, line);
+                    ReadLine(line); // eat the next crlf
+                    ReadLine(line);
                     chunk_size = std::stol(line, 0, 16);
                 }
                 result = true;
@@ -185,7 +191,7 @@ std::size_t HttpClient::ReadBytes(char* buffer, std::size_t length)
     return bytes_read;
 }
 
-bool HttpResponse::ReadLine(std::string & line)
+bool HttpClient::ReadLine(std::string & line)
 {
     char buf[2];
     bool cr(false), lf(false);
