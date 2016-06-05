@@ -92,3 +92,8 @@ const char* HttpResponse::GetBody()
 {
     return body_.data();
 }
+
+std::size_t HttpResponse::GetBodyLength()
+{
+    return body_.size();
+}

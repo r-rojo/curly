@@ -31,6 +31,7 @@ public:
     
     void SetBody(char * buffer, unsigned int size, bool append = false);
     const char* GetBody();
+    std::size_t GetBodyLength();
     
 private:
 
