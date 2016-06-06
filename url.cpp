@@ -6,15 +6,15 @@ using namespace std;
 
 const char* URL_PATTERN = "(http|https|ftp)://([\\w\\.\\-]+)(?::(\\d+))?(/.*)?";
 
-Url::Url()
+url::url()
 {
     
 }
 
 
-Url Url::Parse(const std::string & urlstring)
+url url::parse(const std::string & urlstring)
 {
-    Url url;
+    url url;
     regex rex(URL_PATTERN);
     smatch match;
     if (regex_match(urlstring, match, rex))

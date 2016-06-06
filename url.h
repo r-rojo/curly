@@ -1,53 +1,53 @@
 #pragma once
 #include <string>
 
-class Url
+class url
 {
 public:
-    Url();
+    url();
     
-    std::string ToString()
+    std::string to_string()
     {
         return urlstring_;
     }
     
-    std::string Scheme()
+    std::string scheme()
     {
         return scheme_;
     }
-    void Scheme(const std::string &scheme)
+    void scheme(const std::string &scheme)
     {
         scheme_ = scheme;
     }
     
-    std::string Host()
+    std::string host()
     {
         return host_;
     }
-    void Host(const std::string &host)
+    void host(const std::string &host)
     {
         host_ = host;
     }
     
-    int Port()
+    int port()
     {
         return port_;
     }
-    void Port(int port)
+    void port(int port)
     {
         port_ = port;
     }
     
-    std::string Resource()
+    std::string resource()
     {
         return resource_;
     }
-    void Resource(const std::string &resource)
+    void resource(const std::string &resource)
     {
         resource_ = resource;
     }
     
-    static Url Parse(const std::string &url);
+    static url parse(const std::string &url);
 private:
     std::string urlstring_;
     std::string scheme_;

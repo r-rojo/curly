@@ -13,7 +13,7 @@ bool ci_compare(char lhs, char rhs)
     return ::tolower(lhs) == ::tolower(rhs);
 }
 
-HttpResponse::HttpResponse() :
+http_response::http_response() :
     version_(""),
     phrase_(""),
     status_code_(0),
@@ -23,12 +23,12 @@ HttpResponse::HttpResponse() :
     
 }
 
-HttpResponse::~HttpResponse()
+http_response::~http_response()
 {
 
 }
 
-bool HttpResponse::ParseStatus(const std::string & status)
+bool http_response::parse_status(const std::string & status)
 {
     regex rex(STATUSLINE_PATTERN);
     smatch match;
@@ -43,7 +43,7 @@ bool HttpResponse::ParseStatus(const std::string & status)
     return false;
 }
 
-bool HttpResponse::ParseHeader(const std::string & header)
+bool http_response::parse_header(const std::string & header)
 {
     regex rex(HEADER_PATTERN);
     smatch match;
@@ -57,7 +57,7 @@ bool HttpResponse::ParseHeader(const std::string & header)
     return false;
 }
 
-std::string HttpResponse::Header(const string &key)
+std::string http_response::header(const string &key)
 {
     auto it = headers_.find(key);
     if (it == headers_.end())
@@ -76,7 +76,7 @@ std::string HttpResponse::Header(const string &key)
     return it->second;
 }
 
-void HttpResponse::SetBody(char * buffer, unsigned int length, bool append)
+void http_response::SetBody(char * buffer, unsigned int length, bool append)
 {
     if (!append)
     {
@@ -88,12 +88,12 @@ void HttpResponse::SetBody(char * buffer, unsigned int length, bool append)
     }
 }
 
-const char* HttpResponse::GetBody()
+const char* http_response::body()
 {
     return body_.data();
 }
 
-std::size_t HttpResponse::GetBodyLength()
+std::size_t http_response::body_size()
 {
     return body_.size();
 }

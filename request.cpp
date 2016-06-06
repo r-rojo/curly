@@ -5,20 +5,20 @@
 
 using namespace std;
 
-HttpRequest::HttpRequest(const std::string & method, const std::string & urlstring)
+http_request::http_request(const std::string & method, const std::string & urlstring)
 : method_(method)
 , buffer_("")
 {
-    url_ = Url::Parse(urlstring);
+    url_ = url::parse(urlstring);
 }
 
-string HttpRequest::GetBuffer()
+string http_request::buffer()
 {
     if (buffer_ == "")
     {
         stringstream ss;
-        ss << method_ << " " << url_.Resource() << " HTTP/1.1\r\n";
-        ss << "Host: " << url_.Host() << "\r\n";
+        ss << method_ << " " << url_.resource() << " HTTP/1.1\r\n";
+        ss << "host: " << url_.host() << "\r\n";
         ss << "Accept: */*\r\n";
         ss << "User-Agent: Curly\r\n\r\n";
         

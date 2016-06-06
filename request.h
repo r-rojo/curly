@@ -3,24 +3,24 @@
 #include <vector>
 #include "url.h"
 
-class HttpRequest
+class http_request
 {
 public:
-    HttpRequest(const std::string & method, const std::string & url);
-    Url GetUrl() const
+    http_request(const std::string & method, const std::string & url);
+    url get_url() const
     {
         return url_;
     }
-    Url GetUrl() 
+    url get_url() 
     {
         return url_;
     }
-    std::string GetBuffer();
+    std::string buffer();
     
 
 private:
     std::string buffer_;
     std::string method_;
-    Url url_;
+    url url_;
     
 };

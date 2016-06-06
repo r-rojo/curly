@@ -4,24 +4,24 @@
 #include "request.h"
 #include "response.h"
 
-class HttpClient
+class http_client
 {
 public:
     
-    HttpClient();
+    http_client();
     
-    HttpResponse Send(HttpRequest & request);
-    HttpResponse Get(const std::string & url);
+    http_response send_request(http_request & request);
+    http_response get(const std::string & url);
     
     
 private:
     int sockfd_;
-    bool Connect(const std::string &host, int port);
-    bool Disconnect();
-    bool SendRequest(HttpRequest & request);
-    bool ReceiveResponse(HttpResponse & response);
-    bool ReadLine(std::string &line);
-    std::size_t ReadBytes(char* buffer, std::size_t length);
+    bool connect_socket(const std::string &host, int port);
+    bool disconnect_socket();
+    bool send_request_buffer(http_request & request);
+    bool receive_response(http_response & response);
+    bool socket_readline(std::string &line);
+    std::size_t socket_readbytes(char* buffer, std::size_t length);
     
     
 };

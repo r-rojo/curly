@@ -7,17 +7,17 @@
 #include <unistd.h>
 
 
-HttpClient::HttpClient()
+http_client::http_client()
 : sockfd_(0)
 {
     
 }
 
-bool HttpClient::Connect(const std::string &hostname, int port)
+bool http_client::connect_socket(const std::string &hostname, int port)
 {
     if (sockfd_ != 0)
     {
-        Disconnect();
+        disconnect_socket();
     }
     
     sockfd_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -40,7 +40,7 @@ bool HttpClient::Connect(const std::string &hostname, int port)
     return true;
 }
 
-bool HttpClient::Disconnect()
+bool http_client::disconnect_socket()
 {
     if (close(sockfd_) != 0)
     {
@@ -52,28 +52,28 @@ bool HttpClient::Disconnect()
     return true;
 }
 
-HttpResponse HttpClient::Send(HttpRequest & request)
+http_response http_client::send_request(http_request & request)
 {
-    HttpResponse response;
-    Url url = request.GetUrl();
-    if (Connect(url.Host(), url.Port()) && SendRequest(request))
+    http_response response;
+    url url = request.get_url();
+    if (connect_socket(url.host(), url.port()) && send_request_buffer(request))
     {
-        ReceiveResponse(response);
-        Disconnect();
+        receive_response(response);
+        disconnect_socket();
     }
     
     return response;
 }
 
-HttpResponse HttpClient::Get(const std::string &url)
+http_response http_client::get(const std::string &url)
 {
-    HttpRequest request("GET", url);
-    return Send(request);
+    http_request request("GET", url);
+    return send_request(request);
 }
 
-bool HttpClient::SendRequest(HttpRequest &request)
+bool http_client::send_request_buffer(http_request &request)
 {
-    auto buffer = request.GetBuffer();
+    auto buffer = request.buffer();
     if (write(sockfd_, buffer.data(), buffer.size()) == -1)
     {
         // Log error
@@ -83,7 +83,7 @@ bool HttpClient::SendRequest(HttpRequest &request)
     return true;
 }
 
-bool HttpClient::ReceiveResponse(HttpResponse & response)
+bool http_client::receive_response(http_response & response)
 {
     bool result = false;
     int kq, event_count(0);
@@ -100,12 +100,12 @@ bool HttpClient::ReceiveResponse(HttpResponse & response)
     
     
     std::string statusline = "", line = "";
-    if (!ReadLine(statusline))
+    if (!socket_readline(statusline))
     {
         std::cout << "Error getting status line" << std::endl;
         return false;
     }
-    response.ParseStatus(statusline);
+    response.parse_status(statusline);
     
 
     while(true)
@@ -133,39 +133,39 @@ bool HttpClient::ReceiveResponse(HttpResponse & response)
         if (events[0].ident == sockfd_)
         {
             // get headers
-            while (ReadLine(line) )
+            while (socket_readline(line) )
             {
                 
-                if (line == "\r\n" || !response.ParseHeader(line))
+                if (line == "\r\n" || !response.parse_header(line))
                 {
                     break;
                 }
             }
             
             // now get the body
-            auto content_length = response.Header("Content-Length");
-            auto xfer_encoding = response.Header("Transfer-Encoding");
+            auto content_length = response.header("Content-Length");
+            auto xfer_encoding = response.header("Transfer-Encoding");
             
             if (content_length != "")
             {
                 std::size_t length = std::stol(content_length);
                 char buffer[length];
-                ReadBytes(buffer, length);
+                socket_readbytes(buffer, length);
                 response.SetBody(buffer, length);
                 result = true;
                 break;
             }
             else if (xfer_encoding == "chunked")
             {
-                ReadLine(line);
+                socket_readline(line);
                 std::size_t chunk_size = std::stol(line, 0, 16);
                 while (chunk_size > 0)
                 {
                     char buffer[chunk_size];
-                    ReadBytes(buffer, chunk_size);
+                    socket_readbytes(buffer, chunk_size);
                     response.SetBody(buffer, chunk_size, true); // append to the body
-                    ReadLine(line); // eat the next crlf
-                    ReadLine(line);
+                    socket_readline(line); // eat the next crlf
+                    socket_readline(line);
                     chunk_size = std::stol(line, 0, 16);
                 }
                 result = true;
@@ -181,7 +181,7 @@ bool HttpClient::ReceiveResponse(HttpResponse & response)
     return result;
 }
 
-std::size_t HttpClient::ReadBytes(char* buffer, std::size_t length)
+std::size_t http_client::socket_readbytes(char* buffer, std::size_t length)
 {
     std::size_t bytes_read = read(sockfd_, buffer, length);
     while (bytes_read < length)
@@ -191,7 +191,7 @@ std::size_t HttpClient::ReadBytes(char* buffer, std::size_t length)
     return bytes_read;
 }
 
-bool HttpClient::ReadLine(std::string & line)
+bool http_client::socket_readline(std::string & line)
 {
     char buf[2];
     bool cr(false), lf(false);

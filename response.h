@@ -5,33 +5,33 @@
 #include <string>
 
 
-class HttpResponse
+class http_response
 {
 public:
-    HttpResponse();
+    http_response();
     
-    ~HttpResponse();
-    bool ParseStatus(const std::string &status);
-    bool ParseHeader(const std::string &header);
+    ~http_response();
+    bool parse_status(const std::string &status);
+    bool parse_header(const std::string &header);
     
-    const std::string& Version()
+    const std::string& version()
     {
         return version_;
     }
-    int StatusCode()
+    int status_code()
     {
         return status_code_;
     }
-    const std::string& ReasonPhrase()
+    const std::string& reason_phrase()
     {
         return phrase_;
     }
     
-    std::string Header(const std::string &key);
+    std::string header(const std::string &key);
     
     void SetBody(char * buffer, unsigned int size, bool append = false);
-    const char* GetBody();
-    std::size_t GetBodyLength();
+    const char* body();
+    std::size_t body_size();
     
 private:
 
