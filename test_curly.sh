@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ ! -f ./curly ]; then
-    g++ curly.cpp url.cpp client.cpp request.cpp response.cpp  -o curly -g3 -std=c++11
+if [ ! -f ./bin/curly ]; then
+    g++ curly.cpp url.cpp client.cpp request.cpp response.cpp  -o bin/curly -g3 -std=c++11
 fi
 if [ $# -eq 0 ]; then
     echo "***********  http://www.google.com (is chunked) **************"
