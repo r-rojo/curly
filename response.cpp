@@ -1,8 +1,9 @@
 #include "response.h"
-#include <regex>
+#include <boost/regex.hpp>
 #include <iostream>
 #include <algorithm>
 
+using namespace boost;
 using namespace std;
 const char* STATUSLINE_PATTERN = "(.*?)\\s(.*?)\\s(.*?)\\r\\n";
 const char* HEADER_PATTERN = "(.*?):\\s(.*?)\\r\\n";

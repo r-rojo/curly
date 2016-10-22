@@ -1,8 +1,8 @@
 #include "url.h"
-#include <regex>
+#include <boost/regex.hpp>
 #include <iostream>
 
-using namespace std;
+using namespace boost;
 
 const char* URL_PATTERN = "(http|https|ftp)://([\\w\\.\\-]+)(?::(\\d+))?(/.*)?";
 
@@ -15,7 +15,7 @@ url::url()
 url url::parse(const std::string & urlstring)
 {
     url url;
-    regex rex(URL_PATTERN);
+    regex rex(URL_PATTERN); 
     smatch match;
     if (regex_match(urlstring, match, rex))
     {

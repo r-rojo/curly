@@ -1,10 +1,13 @@
 #include "client.h"
 #include <iostream>
 #include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/event.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <strings.h>
+#include <string.h>
+#include <errno.h>
+#include "event.h"
 
 
 http_client::http_client()
@@ -86,18 +89,7 @@ bool http_client::send_request_buffer(http_request &request)
 bool http_client::receive_response(http_response & response)
 {
     bool result = false;
-    int kq, event_count(0);
-    // allocate kqueue to get notifications of socket events
-    kq = kqueue();
-    if (kq == -1)
-    {
-        std::cout << "Error initializing kqueue: " << strerror(errno) << std::endl;
-        return false;
-    }
-    struct kevent monitor[1];   // to monitor
-    struct kevent events[2];    // to trigger
-    EV_SET(&monitor[0], sockfd_, EVFILT_READ, EV_ADD | EV_ENABLE, 0, 0, 0);
-    
+    event ev(sockfd_);
     
     std::string statusline = "", line = "";
     if (!socket_readline(statusline))
@@ -110,27 +102,7 @@ bool http_client::receive_response(http_response & response)
 
     while(true)
     {
-        event_count = kevent(kq, monitor, 1, events, 1, NULL);
-        if (event_count < 0)
-        {
-            std::cout << "Error waiting for events: " << strerror(errno) << std::endl;
-            break;
-        }
-        
-        if (events[0].flags & EV_EOF)
-        {
-            // EOF reached on socket
-            result = true;
-            break;
-        }
-        
-        if (events[0].flags & EV_ERROR)
-        {
-            std::cout << "Event Error: " << strerror(events[0].data) << std::endl;
-            break;
-        }
-        
-        if (events[0].ident == sockfd_)
+        if (ev.wait(100))
         {
             // get headers
             while (socket_readline(line) )
