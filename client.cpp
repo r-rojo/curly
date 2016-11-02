@@ -149,7 +149,6 @@ bool http_client::receive_response(http_response & response)
         usleep(10);
     }
     
-    close(kq);
     return result;
 }
 
