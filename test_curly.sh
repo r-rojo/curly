@@ -1,4 +1,6 @@
 #!/bin/bash
+# This is a set of tests for curly...
+
 if [ $# -eq 0 ]; then
     echo "***********  http://www.google.com (is chunked) **************"
     ./curly http://www.google.com
