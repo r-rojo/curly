@@ -10,4 +10,4 @@ script:
 addons:
   apt:
     packages:
-      - libboost-regex
+      - libboost-regex-dev
