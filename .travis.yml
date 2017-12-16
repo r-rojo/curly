@@ -4,6 +4,14 @@ compiler: g++
 
 dist: trusty
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "jUsH1/HWXsFNCleX6UOQ3gmZCGeACmwzOimCX8jzJFvlYEugQ5o4ypPZ53d1FHCG7tfDPoJsEXJplR2udCo3F7i38kBHPl5wNNBpuJGsBTG51mnHC8ntZ5yt9JbVMZfr6QaXOzQU9pwStEYIuAcK1HJkFKKN9cIG4xbpzgR6a1kJ+U1cSqmIjyjg38iQWD1LFQQCoAThV+hSTlcoCd2jz4IzUr9SrPd25tSeYZplpmM5tcvvluTnG28GQ79QDKyya4fijoukSlh7Jks2W0tujz0dj9186O5JFXSJwwkg+FkBBkHFmrsva/tLZvfNDHKaDfp82wPGWM+YGnIiZg983cMGnPnPUqgZoTakMR2wCvpsqnNpKE6lVaQG5CHEp7Kivuq8Y0sfbBojB0/hRqZWcYV9Mu+snZ7EXU3G3GSo40NDY19Z3bJAvhIBy9q6ud6+c75V6OyINl6Qp6h8RE+D4g2gWenHKe9RydPis7zfUh3SlF08ZdWgE2Zu7IEFeEZmmFNJoloP2ALjhBgA5cx8RbxXpbVI10F64xEw4KobYeoE03K37B9iS9t1TNrntV4h+Xi/Zv7VtgSf1U1TaXSzWXAAN0KagvxSr8EZkoDQ3MNxFQLSL0Ls1QDH4/Oa5j+ZoIXYqURWZbKbHvvC64p8CDjLWi4JXhqXTroKPEPFbZg="
+
+before_install:
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 script:
   - mkdir build && cd build && cmake ../ && make
 
@@ -11,3 +19,11 @@ addons:
   apt:
     packages:
       - libboost-regex-dev
+  coverity_scan:
+    project:
+      name: "r-rojo/curly"
+      description: "<Your project description here>"
+    notification_email: rodrigo.rojo@me.com
+    build_command_prepend: "mkdir build_cover && cd build_cover && cmake ../"
+    build_command:   "cd build_cover && make"
+    branch_pattern: coverity_scan
