@@ -5,7 +5,9 @@ compiler: g++
 dist: trusty
 
 script:
-  - mkdir build
-  - cd build
-  - cmake ../
-  - make
+  - mkdir build && cd build && cmake ../ && make
+
+addons:
+  apt:
+    packages:
+      - libboost-regex
