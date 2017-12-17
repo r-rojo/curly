@@ -22,6 +22,6 @@ addons:
       name: "r-rojo/curly"
       description: "<Your project description here>"
     notification_email: rodrigo.rojo@me.com
-    build_command_prepend: "mkdir build_cover && cd build_cover && cmake ../"
-    build_command:   "cd build_cover && make"
+    build_command_prepend: "mkdir cover_build && cd cover_build && cmake ../"
+    build_command:   "make"
     branch_pattern: coverity_scan
