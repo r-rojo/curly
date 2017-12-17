@@ -3,6 +3,9 @@ language: cpp
 compiler: g++
 
 env:
+  CMAKE_BUILD_TYPE=Debug
+  CMAKE_BUILD_TYPE=Release
+
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
    #   via the "travis encrypt" command using the project repo's public key
@@ -11,7 +14,7 @@ env:
 before_install:
       - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 script:
-  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir build && cd build && cmake ../ && make; fi
+  - mkdir build && cd build && cmake ../ && make
 
 addons:
   apt:
