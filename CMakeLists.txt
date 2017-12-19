@@ -27,3 +27,10 @@ target_link_libraries(urly ${Boost_LIBRARIES})
 
 add_executable(curly curly.cpp)
 target_link_libraries(curly urly)
+
+
+find_package(GTest)
+if (GTEST_FOUND)
+    add_executable(test_curly tests.cpp)
+    target_link_libraries(test_curly urly ${GTEST_BOTH_LIBRARIES})
+endif()
