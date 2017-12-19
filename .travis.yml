@@ -25,6 +25,7 @@ addons:
   apt:
     packages:
       - libboost-regex-dev
+      - lcov
 
   coverity_scan:
     project:
