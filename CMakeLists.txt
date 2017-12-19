@@ -39,6 +39,7 @@ if (GTEST_FOUND)
     target_link_libraries(test_curly urly ${GTEST_BOTH_LIBRARIES})
     option(BUILD_COVERAGE "enable coverage build" OFF)
     if(BUILD_COVERAGE)
+        set(COVERAGE_EXCLUDES boost/* c++/* "*/include/gtest/*")
         setup_target_for_coverage(NAME curly_coverage
                                   EXECUTABLE test_curly --gtest_output=xml
                                   DEPENDENCIES urly)
