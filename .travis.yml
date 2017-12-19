@@ -19,7 +19,7 @@ script:
   - if [ -f test_curly ]; then ./test_curly; fi
 
 after_success:
-    - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+    - coveralls --exclude lib --exclude tests --exclude CMakeFiles --gcov-options '\-lp'
 
 addons:
   apt:
