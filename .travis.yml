@@ -12,8 +12,9 @@ env:
 
 before_install:
       - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+      - wget https://github.com/google/googletest/archive/release-1.8.0.zip && unzip release-1.8.0.zip && cd googletest-release-1.8.0 && cmake . -DCMAKE_INSTALL_PREFIX=/tmp/tmp_gtest && make && make install
 script:
-  - mkdir build && cd build && cmake ../ && make
+  - mkdir build && cd build && cmake ../ -DGTEST_ROOT=/tmp/tmp_gtest && make
   - if [ -f test_curly ]; then ./test_curly; fi
 
 addons:
