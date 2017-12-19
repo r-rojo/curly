@@ -41,4 +41,5 @@ bool event::wait(uint32_t timeout_usec)
         perror("epoll_pwait");
         exit(EXIT_FAILURE);
     }
+    return nfds > 0;
 }
