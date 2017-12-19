@@ -2,6 +2,8 @@ project(curly)
 
 cmake_minimum_required(VERSION 2.8)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 set(CMAKE_CXX_FLAGS --std=c++11)
 
 find_package(Boost COMPONENTS regex)
@@ -34,4 +36,9 @@ if (GTEST_FOUND)
     add_executable(test_curly tests.cpp)
     include_directories(${GTEST_INCLUDE_DIRS})
     target_link_libraries(test_curly urly ${GTEST_BOTH_LIBRARIES})
+    if(CMAKE_BUILD_TYPE STREQUAL "Coverage")
+        setup_target_for_coverage(curly_coverage test_curly coverage)
+        set(CMAKE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+        set(CMAKE_C_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
+    endif()
 endif()
