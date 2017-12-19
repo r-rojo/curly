@@ -19,7 +19,7 @@ script:
   - if [ -f test_curly ]; then ./test_curly; fi
 
 after_success:
-    - coveralls --gcov-options '\-lp' -r curly_coverage --verbose
+    - coveralls -l curly_coverage.info.cleaned
 
 addons:
   apt:
