@@ -1,6 +1,6 @@
 project(curly)
 
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_CXX_FLAGS --std=c++11)
 
@@ -18,11 +18,10 @@ if (APPLE)
     set(src ${src} event_darwin.cpp)
 elseif (UNIX)
     set(src ${src} event_linux.cpp)
-    message("this is sparta: ${src}")
 endif()
 
 add_library(urly SHARED
-    ${src}    
+    ${src}
 )
 target_link_libraries(urly ${Boost_LIBRARIES})
 
