@@ -21,7 +21,6 @@ addons:
   apt:
     packages:
       - libboost-regex-dev
-      - libgtest-dev
 
   coverity_scan:
     project:
