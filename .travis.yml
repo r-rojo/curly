@@ -12,6 +12,8 @@ env:
   matrix:
     - BUILD_TYPE=Debug
     - BUILD_TYPE=Release
+    - TEST_TYPE=One
+    - TEST_TYPE=Two
 
 
 before_install:
